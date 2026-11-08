@@ -1,0 +1,16 @@
+{
+  "bunVersion": "1.4.3",
+  "delegatusVersion": "1.11.0",
+  "source": "https://api.github.com/repos/oven-sh/bun/releases/tags/bun-v1.4.3",
+  "verifiedOn": "2026-11-08",
+  "assets": {
+    "x64": {
+      "name": "bun-windows-x64-baseline.zip",
+      "sha256": "d7a7d3eb216614544aab0cde2d8d9f2e4e87839bf5a30a1cd11d077f02d84e0c"
+    },
+    "arm64": {
+      "name": "bun-windows-aarch64.zip",
+      "sha256": "5e8f142ef722cbc9f67dc068a166e46ee72be8307b38cac7186589d2face668f"
+    }
+  }
+}

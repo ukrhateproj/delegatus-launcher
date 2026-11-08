@@ -1,0 +1,10 @@
+# Generated files and per-user data
+.DS_Store
+.build/
+build/
+dist/
+work/
+*.log
+settings.json
+BrowserProfile/
+Runtime/

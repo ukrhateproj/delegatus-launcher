@@ -1,0 +1,13 @@
+Build the Mac app using Xcode Command Line Tools:
+  ./build.sh /absolute/path/to/empty-output-folder
+
+Build the Windows EXE with PowerShell 7/Roslyn and the official Microsoft.NETFramework.ReferenceAssemblies.net472 1.0.3 NuGet reference package:
+  ./build-Windows.ps1 -ReferenceDirectory <package>/build/.NETFramework/v4.7.2 -OutputDirectory <Windows-folder>
+The output folder must already contain Resources/Delegatus.ico.
+Recipients use the prebuilt app/EXE and do not need development tools.
+
+Core checks (an isolated temporary directory must be supplied):
+  swiftc Core.swift CoreChecks.swift -o core-checks
+  ./core-checks /absolute/path/to/new-test-folder
+
+The optional SIGNING_IDENTITY variable for the Mac build selects an installed signing identity. Signing alone is not notarization.

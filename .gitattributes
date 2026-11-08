@@ -1,0 +1,9 @@
+* text=auto
+*.swift text eol=lf
+*.sh text eol=lf
+*.ps1 text eol=lf
+*.cs text eol=lf
+Windows/** -text whitespace=cr-at-eol
+*.exe binary
+*.ico binary
+*.icns binary

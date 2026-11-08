@@ -1,0 +1,14 @@
+Validation scope: macOS static/build checks only.
+Default entrypoint: Delegatus.exe (GUI WinExe, .NET Framework 4.7.2+); optional CMD console fallback.
+The final PowerShell resource passes Parser.ParseFile using the verified portable PowerShell 7.6.9 on macOS.
+Its embedded Win32 C# helpers compile in that tool. Neither check executes the Windows code path.
+No Windows PowerShell 5.1 runtime or Windows host was available. No Windows end-to-end PASS is claimed.
+No Bun/Delegatus Windows installation or server was run. No Windows API was invoked.
+Official Bun 1.4.3 archive SHA-256 values were read from its GitHub release API over verified HTTPS.
+Release metadata: published_at 2026-10-10T05:24:54Z.
+Static review addressed package Bun engine requirements, exact private-browser-profile PID selection,
+private Bun cache, incomplete-install receipts and direct inheritable server log file handles.
+Required Windows acceptance: GUI first run/decline/install/cancel, manual runtime selection,
+healthy-server reuse, occupied HTTP/silent TCP port, declined port confirmation, PID/start-time change,
+repeated double-click, private-profile Edge/Chrome app-window reuse, owned stop vs reused-server preservation,
+leave-server-running after controller exit, directories with spaces/Unicode and CMD fallback.

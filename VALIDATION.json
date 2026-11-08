@@ -1,0 +1,38 @@
+{
+  "version": "2.0.1",
+  "built_at": "2026-11-08T21:05:29.698698+02:00",
+  "mac": {
+    "architectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "minimumOS": "13.0",
+    "coreChecks": {
+      "passed": 19,
+      "failed": 0
+    },
+    "freshPrivateDependencySetup": "PASS",
+    "cancelPreservesExistingRuntime": "PASS",
+    "relocatedNativeWindowWithLiveConnection": "PASS",
+    "signing": "ad-hoc; not notarized",
+    "physicalIntelRuntimeTested": false,
+    "runningNoticeCheckbox": "PASS: visible unchecked checkbox, checked dismissal, suppression in same process and after restart",
+    "suppressionScope": "Only the already-running information notice; install consent/cancel/errors unaffected",
+    "localTestPreferenceReset": true
+  },
+  "windows": {
+    "entrypoint": "Windows/Delegatus.exe",
+    "guiSubsystem": true,
+    "embeddedIcon": true,
+    "managedArchitecture": "AnyCPU",
+    "targetFramework": ".NET Framework 4.7.2",
+    "PowerShellSyntax": "PASS",
+    "argumentQuotingVectors": 5,
+    "embeddedCSharpCompilation": "PASS",
+    "actualWindowsRuntimeTested": false,
+    "signing": "not Authenticode signed"
+  },
+  "privacy": "Personal paths, logs, settings, accounts and browser profiles are excluded.",
+  "personalLauncherBinaryPreserved": true,
+  "patched_at": "2026-11-08T21:19:44.228102+02:00"
+}

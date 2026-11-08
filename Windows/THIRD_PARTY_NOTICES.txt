@@ -1,0 +1,18 @@
+This community launcher is not an official Delegatus release.
+
+Delegatus logo/icon: from Latand/delegatus, MIT.
+The original Delegatus MIT license is included as Delegatus-LICENSE.txt.
+Project: https://github.com/Latand/delegatus
+
+Bun and Delegatus runtimes are not bundled in the distribution archive.
+When explicitly requested by the receiving user, the launcher downloads Bun
+from https://github.com/oven-sh/bun/releases/tag/bun-v1.4.3 and installs
+https://www.npmjs.com/package/delegatus-cli/v/1.11.0 into a private user folder.
+These projects and their dependencies retain their respective licenses;
+the installed packages include their own license files.
+
+The macOS app uses Apple's system AppKit and WebKit frameworks.
+The Windows launcher uses Windows PowerShell and an existing Edge/Chrome browser.
+No Apple/Microsoft frameworks or browser binaries are redistributed here.
+
+Bundled source and launcher code: MIT, see LICENSE.txt.
