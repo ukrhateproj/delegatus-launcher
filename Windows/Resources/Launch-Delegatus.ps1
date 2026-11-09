@@ -1,4 +1,4 @@
-# Delegatus Launcher for Windows, version 2.0.
+# Delegatus Launcher for Windows, version 2.0.1.
 # Requires Windows 10 (1809+)/11, Windows PowerShell 5.1 and Edge or Chrome.
 # Deliberately changes neither PowerShell policy nor global package installations.
 Set-StrictMode -Version 2.0
@@ -177,7 +177,61 @@ function LoadSettings {
 }
 function SaveSettings {
     $text = $script:Settings | ConvertTo-Json
-    [IO.File]::WriteAllText((Join-Path $script:Base 'settings.json'), $text, [Text.UTF8Encoding]::new($false))
+    $path = Join-Path $script:Base 'settings.json'
+    $temporary = Join-Path $script:Base ('.settings-' + [Guid]::NewGuid().ToString('N') + '.tmp')
+    try {
+        [IO.File]::WriteAllText($temporary, $text, [Text.UTF8Encoding]::new($false))
+        if ([IO.File]::Exists($path)) { [IO.File]::Replace($temporary, $path, [NullString]::Value) }
+        else { [IO.File]::Move($temporary, $path) }
+    } finally { if ([IO.File]::Exists($temporary)) { [IO.File]::Delete($temporary) } }
+}
+function IsRunningNoticeSuppressed {
+    $key = 'SuppressRunningRuntimeNoticeV1'
+    return $script:Settings.ContainsKey($key) -and ($script:Settings[$key] -is [bool]) -and $script:Settings[$key]
+}
+function SetRunningNoticeSuppressed([bool]$Suppressed) {
+    $key = 'SuppressRunningRuntimeNoticeV1'
+    $existed = $script:Settings.ContainsKey($key)
+    $previous = $script:Settings[$key]
+    try {
+        $script:Settings[$key] = $Suppressed
+        SaveSettings
+    } catch {
+        if ($existed) { $script:Settings[$key] = $previous }
+        else { $script:Settings.Remove($key) }
+        throw
+    }
+}
+function ShowRunningNotice($Owner) {
+    if (-not $script:Ready -or (IsRunningNoticeSuppressed)) { return }
+    if ($script:OwnedServer -and $script:OwnedServer.HasExited) { return }
+    $form = [Windows.Forms.Form]::new()
+    try {
+        $form.Text = 'Delegatus settings'
+        $form.ClientSize = [Drawing.Size]::new(640, 255)
+        $form.StartPosition = 'CenterParent'
+        $form.FormBorderStyle = 'FixedDialog'
+        $form.MaximizeBox = $false; $form.MinimizeBox = $false
+        $form.ControlBox = $false; $form.ShowInTaskbar = $false
+        SetFormIcon $form
+        $label = [Windows.Forms.Label]::new()
+        $label.Text = "Delegatus is already running. Dependencies can be changed after the server has stopped.`r`n`r`nEach user installs and connects their own Codex or Claude Code in the Delegatus setup guide."
+        $label.SetBounds(18, 18, 604, 116); $form.Controls.Add($label)
+        $checkbox = [Windows.Forms.CheckBox]::new()
+        $checkbox.Text = 'Do not show again'; $checkbox.Checked = $false
+        $checkbox.SetBounds(20, 145, 590, 26); $form.Controls.Add($checkbox)
+        $ok = [Windows.Forms.Button]::new(); $ok.Text = 'OK'
+        $ok.SetBounds(360, 205, 110, 32); $ok.DialogResult = [Windows.Forms.DialogResult]::OK
+        $form.Controls.Add($ok); $form.AcceptButton = $ok; $form.CancelButton = $ok
+        $instructions = [Windows.Forms.Button]::new(); $instructions.Text = 'Delegatus instructions'
+        $instructions.SetBounds(480, 205, 142, 32); $instructions.DialogResult = [Windows.Forms.DialogResult]::Yes
+        $form.Controls.Add($instructions)
+        $response = $form.ShowDialog($Owner)
+        SetRunningNoticeSuppressed $checkbox.Checked
+        if ($response -eq [Windows.Forms.DialogResult]::Yes) {
+            Start-Process -FilePath 'https://github.com/Latand/delegatus#quick-start' | Out-Null
+        }
+    } finally { $form.Dispose() }
 }
 function FindBun([Version]$Minimum = [Version]'1.4.0') {
     $paths = [Collections.Generic.List[string]]::new()
@@ -243,7 +297,7 @@ function Download([string]$Url, [string]$Destination) {
     $client = [Net.WebClient]::new()
     BeginGuiProgress 'Downloading Bun 1.4.3. The archive SHA-256 will be verified before use.'
     try {
-        $client.Headers['User-Agent'] = 'Delegatus-Launcher/2.0'
+        $client.Headers['User-Agent'] = 'Delegatus-Launcher/2.0.1'
         $task = $client.DownloadFileTaskAsync([Uri]$Url, $Destination)
         $started = [DateTime]::UtcNow
         $cancelled = $false
@@ -555,26 +609,28 @@ function GuiError([string]$Text) {
 }
 function ShowGuiControl {
     $form = [Windows.Forms.Form]::new(); $form.Text = 'Delegatus - Control'
-    $form.Size = [Drawing.Size]::new(615, 210); $form.StartPosition = 'CenterScreen'
+    $form.Size = [Drawing.Size]::new(725, 210); $form.StartPosition = 'CenterScreen'
     $form.FormBorderStyle = 'FixedDialog'; $form.MaximizeBox = $false; SetFormIcon $form
-    $label = [Windows.Forms.Label]::new(); $label.SetBounds(18, 18, 560, 80)
+    $label = [Windows.Forms.Label]::new(); $label.SetBounds(18, 18, 670, 80)
     $label.Text = $(if ($script:OwnedServer) { 'Delegatus is running in its own app window. Closing that window leaves the server running. Stop affects only the server created here.' } else { 'Using an existing Delegatus server. This control will not stop that server.' })
     $form.Controls.Add($label)
     $open = [Windows.Forms.Button]::new(); $open.Text = 'Open Delegatus'; $open.SetBounds(18, 112, 140, 32)
     $open.Add_Click({ try { if ($script:Ready) { OpenViewer } } catch { GuiError $_.Exception.Message } }); $form.Controls.Add($open)
-    $logs = [Windows.Forms.Button]::new(); $logs.Text = 'Logs'; $logs.SetBounds(168, 112, 100, 32)
+    $logs = [Windows.Forms.Button]::new(); $logs.Text = 'Logs'; $logs.SetBounds(168, 112, 90, 32)
     $logs.Add_Click({ try { Start-Process -FilePath (Join-Path $env:SystemRoot 'explorer.exe') -ArgumentList (NativeArgument (Join-Path $script:Base 'Logs')) | Out-Null } catch { GuiError $_.Exception.Message } }); $form.Controls.Add($logs)
-    $stop = [Windows.Forms.Button]::new(); $stop.Text = 'Stop own server'; $stop.SetBounds(278, 112, 145, 32)
+    $settings = [Windows.Forms.Button]::new(); $settings.Text = 'Settings'; $settings.SetBounds(268, 112, 100, 32)
+    $settings.Add_Click({ param($sender, $eventArgs) try { ShowRunningNotice ($sender.FindForm()) } catch { GuiError $_.Exception.Message } }); $form.Controls.Add($settings)
+    $stop = [Windows.Forms.Button]::new(); $stop.Text = 'Stop own server'; $stop.SetBounds(378, 112, 145, 32)
     $stop.Enabled = $script:OwnedServer -and -not $script:OwnedServer.HasExited
     $stop.Add_Click({ try { StopOwnedServer } catch { GuiError $_.Exception.Message } }); $form.Controls.Add($stop)
-    $exitButton = [Windows.Forms.Button]::new(); $exitButton.Text = 'Exit'; $exitButton.SetBounds(448, 112, 125, 32)
+    $exitButton = [Windows.Forms.Button]::new(); $exitButton.Text = 'Exit'; $exitButton.SetBounds(558, 112, 125, 32)
     $exitButton.Add_Click({ param($sender, $eventArgs) $sender.FindForm().Close() }); $form.Controls.Add($exitButton)
     $form.Add_FormClosing({ param($sender, $eventArgs)
         try { if (-not $script:GuiExitApproved) { if (ExitAllowed) { $script:GuiExitApproved = $true } else { $eventArgs.Cancel = $true } } }
         catch { $eventArgs.Cancel = $true; GuiError $_.Exception.Message }
     })
     $timer = [Windows.Forms.Timer]::new(); $timer.Interval = 400
-    $script:GuiControl = @{ Form = $form; Label = $label; Open = $open; Stop = $stop; Timer = $timer }
+    $script:GuiControl = @{ Form = $form; Label = $label; Open = $open; Settings = $settings; Stop = $stop; Timer = $timer }
     $timer.Add_Tick({
         try {
             if ($script:Wake.WaitOne(0) -and $script:Ready) { OpenViewer }
@@ -582,7 +638,7 @@ function ShowGuiControl {
                 $script:Ready = $false
                 GuiError ('Delegatus CLI exited (code ' + $script:OwnedServer.ExitCode + ').')
             }
-            if (-not $script:Ready) { $script:GuiControl.Open.Enabled = $false; $script:GuiControl.Stop.Enabled = $false; $script:GuiControl.Label.Text = 'The owned server has stopped. Logs are available. Exit and start Delegatus again to restart.' }
+            if (-not $script:Ready) { $script:GuiControl.Open.Enabled = $false; $script:GuiControl.Settings.Enabled = $false; $script:GuiControl.Stop.Enabled = $false; $script:GuiControl.Label.Text = 'The owned server has stopped. Logs are available. Exit and start Delegatus again to restart.' }
         } catch { $script:GuiControl.Timer.Stop(); GuiError $_.Exception.Message }
     })
     $form.Add_Shown({ try { OpenViewer } catch { GuiError $_.Exception.Message } })
@@ -610,7 +666,7 @@ try {
         Write-Host 'Delegatus Launcher is already open. Its existing window was requested; no second server was started.'
         exit 0
     }
-    Log 'Windows launcher 2.0 started. No automatic installation.'
+    Log 'Windows launcher 2.0.1 started. No automatic installation.'
     LoadSettings
     Add-Type -TypeDefinition @'
 using System;
@@ -686,7 +742,7 @@ public static class DelegatusFileProcess {
     }
 }
 '@
-    Write-Host 'Delegatus Launcher 2.0 - Windows'
+    Write-Host 'Delegatus Launcher 2.0.1 - Windows'
     Write-Host ('Logs and private runtime: ' + $script:Base)
     Write-Host 'No personal configuration is included in this package.'
     if (ViewerHealthy) {

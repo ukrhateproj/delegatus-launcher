@@ -11,3 +11,7 @@ Core checks (an isolated temporary directory must be supplied):
   ./core-checks /absolute/path/to/new-test-folder
 
 The optional SIGNING_IDENTITY variable for the Mac build selects an installed signing identity. Signing alone is not notarization.
+
+Windows preference checks, runnable in PowerShell on macOS without WinForms:
+  ./WindowsNoticeChecks.ps1 -TestDirectory /absolute/path/to/new-test-folder
+These check real settings persistence and failure handling, not Windows UI or Win32 runtime behavior.

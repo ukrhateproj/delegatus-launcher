@@ -1,4 +1,4 @@
-﻿DELEGATUS LAUNCHER 2.0 — WINDOWS
+﻿DELEGATUS LAUNCHER 2.0.1 — WINDOWS
 
 This folder is a shareable Windows launcher. It contains no personal accounts,
 chat history, API keys, cookies, or installed Bun/Delegatus runtime.
@@ -95,3 +95,9 @@ Delegatus: https://github.com/Latand/delegatus
 Private local package command: bun add --cwd <private-folder> --exact delegatus-cli@1.11.0
 Pinned archive names/hashes: Resources/Runtime-manifest.json.
 Third-party licence notices are supplied in the enclosing distribution package.
+
+WINDOWS 2.0.1
+The Settings button opens the already-running information notice. Select
+Do not show again and confirm to hide only this notice for the current account.
+The preference survives restarts; runtime paths and other settings are retained.
+Installation, cancellation, stop confirmations and errors are never suppressed.

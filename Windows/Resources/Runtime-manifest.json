@@ -12,5 +12,6 @@
       "name": "bun-windows-aarch64.zip",
       "sha256": "5e8f142ef722cbc9f67dc068a166e46ee72be8307b38cac7186589d2face668f"
     }
-  }
+  },
+  "launcherVersion": "2.0.1"
 }

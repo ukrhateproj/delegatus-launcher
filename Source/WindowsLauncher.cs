@@ -7,8 +7,8 @@ using System.Reflection;
 [assembly: AssemblyTitle("Delegatus Launcher")]
 [assembly: AssemblyDescription("Community launcher for Delegatus")]
 [assembly: AssemblyProduct("Delegatus Launcher")]
-[assembly: AssemblyVersion("2.0.0.0")]
-[assembly: AssemblyFileVersion("2.0.0.0")]
+[assembly: AssemblyVersion("2.0.1.0")]
+[assembly: AssemblyFileVersion("2.0.1.0")]
 internal static class Program {
     private static string Quote(string value) {
         StringBuilder b = new StringBuilder("\""); int slashes = 0;

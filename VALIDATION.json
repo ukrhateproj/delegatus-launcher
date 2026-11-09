@@ -30,9 +30,22 @@
     "argumentQuotingVectors": 5,
     "embeddedCSharpCompilation": "PASS",
     "actualWindowsRuntimeTested": false,
-    "signing": "not Authenticode signed"
+    "signing": "not Authenticode signed",
+    "version": "2.0.1",
+    "assemblyVersion": "2.0.1.0",
+    "noticePreferenceChecks": {
+      "passed": 12,
+      "failed": 0,
+      "host": "PowerShell 7.6.9 on macOS",
+      "freshProcessPersistence": true,
+      "unrelatedSettingsPreserved": true,
+      "failedSaveRollback": true
+    },
+    "runningNoticeCheckbox": "Implemented and source-reviewed; actual Windows UI not executed",
+    "suppressionScope": "Only the already-running information notice"
   },
   "privacy": "Personal paths, logs, settings, accounts and browser profiles are excluded.",
   "personalLauncherBinaryPreserved": true,
-  "patched_at": "2026-11-08T21:19:44.228102+02:00"
+  "patched_at": "2026-11-08T21:19:44.228102+02:00",
+  "windows_updated_at": "2026-11-10T01:52:37.454879+02:00"
 }

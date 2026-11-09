@@ -1,4 +1,4 @@
-﻿ЗАПУСКАТОР DELEGATUS 2.0 — WINDOWS
+﻿ЗАПУСКАТОР DELEGATUS 2.0.1 — WINDOWS
 
 Цю папку можна передавати іншим. Вона не містить особистих облікових записів,
 історії чатів, API-ключів, cookies або встановлених Bun/Delegatus.
@@ -95,3 +95,8 @@ Delegatus: https://github.com/Latand/delegatus
 Локальне встановлення: bun add --cwd <private-folder> --exact delegatus-cli@1.11.0
 Назви та SHA-256 архівів: Resources/Runtime-manifest.json.
 Ліцензійні повідомлення третіх сторін додаються в загальному пакеті поширення.
+
+WINDOWS 2.0.1
+Settings opens the already-running information notice. Its Do not show again
+checkbox persists for the current user and hides only that information notice.
+Installation, cancellation, stop confirmations and errors are not suppressed.

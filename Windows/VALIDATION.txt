@@ -12,3 +12,11 @@ Required Windows acceptance: GUI first run/decline/install/cancel, manual runtim
 healthy-server reuse, occupied HTTP/silent TCP port, declined port confirmation, PID/start-time change,
 repeated double-click, private-profile Edge/Chrome app-window reuse, owned stop vs reused-server preservation,
 leave-server-running after controller exit, directories with spaces/Unicode and CMD fallback.
+
+Windows update 2.0.1 (2026-11-10):
+EXE AssemblyVersion and FileVersion 2.0.1.0 verified.
+12 preference-persistence checks passed in PowerShell 7.6.9 on macOS, including
+a fresh child process, Unicode paths, preserved runtime settings, unchecked state,
+invalid boolean values and save failure with in-memory rollback.
+The new Settings/Do not show again WinForms controls require a Windows UI test;
+no Windows runtime or UI PASS is claimed.
