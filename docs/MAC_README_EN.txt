@@ -51,4 +51,3 @@ runtime testing were not available on the build computer.
 
 Mac update 2.0.1 adds a persistent Do not show again checkbox to the
 already-running information notice only. Install consent and errors remain visible.
-The Windows component is unchanged.
