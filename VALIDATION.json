@@ -47,5 +47,21 @@
   "privacy": "Personal paths, logs, settings, accounts and browser profiles are excluded.",
   "personalLauncherBinaryPreserved": true,
   "patched_at": "2026-11-08T21:19:44.228102+02:00",
-  "windows_updated_at": "2026-11-10T01:52:37.454879+02:00"
+  "windows_updated_at": "2026-11-10T01:52:37.454879+02:00",
+  "linux": {
+    "version": "2.0.1",
+    "entrypoint": "Linux/install.sh",
+    "implementation": "Python 3.10+ standard library with system Tkinter",
+    "targets": [
+      "Ubuntu 22.04+ (glibc)",
+      "Arch Linux (x86_64)"
+    ],
+    "automatedCheckWorkflow": ".github/workflows/linux.yml",
+    "automatedCheckResults": "See the Linux launcher Actions run for the exact commit; includes real private runtime setup and Linux process tests.",
+    "physicalDesktopSessionTested": false,
+    "nativeARM64RuntimeTested": false,
+    "browserWindowOnPhysicalLinuxTested": false,
+    "suppressionScope": "Only the already-running information notice",
+    "macAndWindowsBinariesUnchanged": true
+  }
 }

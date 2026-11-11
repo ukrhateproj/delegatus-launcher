@@ -8,3 +8,5 @@ work/
 settings.json
 BrowserProfile/
 Runtime/
+__pycache__/
+*.py[cod]
