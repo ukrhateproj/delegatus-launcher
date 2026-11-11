@@ -29,7 +29,7 @@ Arch ([Python](https://archlinux.org/packages/core/x86_64/python/),
 [Tk](https://archlinux.org/packages/extra/x86_64/tk/)):
 
 ```sh
-sudo pacman -S python tk
+sudo pacman -S python tk ttf-dejavu
 ```
 
 Install a supported browser through its official distribution channel if needed.

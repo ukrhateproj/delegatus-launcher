@@ -448,10 +448,16 @@ class Launcher:
                 os.close(handle)
         deadline = time.monotonic() + 5
         while time.monotonic() < deadline:
-            if not self.port_owners():
-                return
+            try:
+                if not self.port_owners():
+                    return
+            except LauncherError:
+                # After SIGTERM, /proc/net and disappearing /proc/PID/fd entries
+                # can describe different moments. Retry observation only; never
+                # infer permission to send another signal from a partial snapshot.
+                pass
             time.sleep(0.1)
-        raise LauncherError("Port is still occupied. Close its application manually; no forced termination was attempted.")
+        raise LauncherError("The port could not be confirmed free. Close its application manually; no additional or forced termination was attempted.")
 
     def owned_running(self):
         return self._owned is not None and self._owned.poll() is None

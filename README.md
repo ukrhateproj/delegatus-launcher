@@ -66,7 +66,7 @@ provides a console fallback.
 
 Requires Python 3.10+, Tkinter and an X11 or XWayland desktop session. Ubuntu
 users can install the desktop requirements with `sudo apt install python3 python3-tk`;
-Arch users with `sudo pacman -S python tk`. These commands are manual; the launcher
+Arch users with `sudo pacman -S python tk ttf-dejavu`. These commands are manual; the launcher
 does not run a system package manager. A Chromium-family browser provides the
 separate app window. App-menu installation and managed runtime setup are per user.
 See the [Linux guide](Linux/README.md) for details and test limits.

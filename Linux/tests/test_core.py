@@ -235,6 +235,31 @@ class Fixture(unittest.TestCase):
                 self.launcher.free_port([original])
             kill.assert_not_called()
 
+    def test_free_port_retries_transient_post_signal_snapshot_without_resignalling(self):
+        owners = [PortOwner(123, "first", "python", os.getuid())]
+        snapshots = [owners, LauncherError("listener inode disappeared from process fds"), []]
+        with patch.object(self.launcher, "port_owners", side_effect=snapshots), patch("delegatus_core.os.pidfd_open", return_value=321, create=True) as opened, patch("delegatus_core.signal.pidfd_send_signal", create=True) as sent, patch("delegatus_core.os.close") as closed, patch("delegatus_core._identity", return_value=("first", os.getuid(), "python")), patch("delegatus_core.time.sleep"):
+            self.launcher.free_port(owners)
+        opened.assert_called_once_with(123)
+        sent.assert_called_once_with(321, signal.SIGTERM)
+        closed.assert_called_once_with(321)
+
+    def test_free_port_unknown_pre_signal_snapshot_never_signals(self):
+        owners = [PortOwner(123, "first", "python", os.getuid())]
+        with patch.object(self.launcher, "port_owners", side_effect=LauncherError("unknown owner")), patch("delegatus_core.os.pidfd_open", create=True) as opened, patch("delegatus_core.signal.pidfd_send_signal", create=True) as sent:
+            with self.assertRaises(LauncherError):
+                self.launcher.free_port(owners)
+        opened.assert_not_called()
+        sent.assert_not_called()
+
+    def test_free_port_replacement_after_signal_stays_visible_without_extra_signals(self):
+        owners = [PortOwner(123, "first", "python", os.getuid())]
+        replacement = [PortOwner(456, "replacement", "python", os.getuid())]
+        with patch.object(self.launcher, "port_owners", side_effect=[owners, replacement]), patch("delegatus_core.os.pidfd_open", return_value=321, create=True), patch("delegatus_core.signal.pidfd_send_signal", create=True) as sent, patch("delegatus_core.os.close"), patch("delegatus_core._identity", return_value=("first", os.getuid(), "python")), patch("delegatus_core.time.monotonic", side_effect=[0, 1, 6]), patch("delegatus_core.time.sleep"):
+            with self.assertRaisesRegex(LauncherError, "could not be confirmed free"):
+                self.launcher.free_port(owners)
+        sent.assert_called_once_with(321, signal.SIGTERM)
+
     def test_unknown_port_owner_fails_closed(self):
         proc = self.root / "proc"
         (proc / "net").mkdir(parents=True)

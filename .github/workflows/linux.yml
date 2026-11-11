@@ -39,7 +39,7 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Install test-only dependencies
-        run: pacman -Syu --noconfirm --needed git python tk python-gobject xorg-server-xvfb xorg-xauth desktop-file-utils
+        run: pacman -Syu --noconfirm --needed git python tk ttf-dejavu python-gobject xorg-server-xvfb xorg-xauth desktop-file-utils
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
