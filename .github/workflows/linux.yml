@@ -1,0 +1,53 @@
+name: Linux launcher
+
+on:
+  pull_request:
+    paths:
+      - 'Linux/**'
+      - '.github/workflows/linux.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ubuntu:
+    name: Ubuntu ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Install test-only desktop dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y python3-tk python3-gi xvfb xauth desktop-file-utils
+      - name: Core, installer and controller checks
+        run: xvfb-run -a /usr/bin/python3 -m unittest discover -s Linux/tests -v
+      - name: Real private Bun and Delegatus startup
+        run: xvfb-run -a /usr/bin/python3 Linux/tests/integration_runtime.py --install-private-runtime
+
+  arch:
+    name: Arch Linux
+    runs-on: ubuntu-24.04
+    container: archlinux:base
+    timeout-minutes: 20
+    steps:
+      - name: Install test-only dependencies
+        run: pacman -Syu --noconfirm --needed git python tk python-gobject xorg-server-xvfb xorg-xauth desktop-file-utils
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Create unprivileged test user
+        run: |
+          useradd -m launcher-test
+          chown -R launcher-test:launcher-test "$GITHUB_WORKSPACE"
+      - name: Core, installer and controller checks
+        run: runuser -u launcher-test -- xvfb-run -a /usr/bin/python -m unittest discover -s Linux/tests -v
+      - name: Real private Bun and Delegatus startup
+        run: runuser -u launcher-test -- xvfb-run -a /usr/bin/python Linux/tests/integration_runtime.py --install-private-runtime

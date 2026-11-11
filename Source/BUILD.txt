@@ -15,3 +15,11 @@ The optional SIGNING_IDENTITY variable for the Mac build selects an installed si
 Windows preference checks, runnable in PowerShell on macOS without WinForms:
   ./WindowsNoticeChecks.ps1 -TestDirectory /absolute/path/to/new-test-folder
 These check real settings persistence and failure handling, not Windows UI or Win32 runtime behavior.
+
+Linux runs directly from the Linux/ directory with Python 3.10+ and Tkinter:
+  bash Linux/install.sh
+Linux checks (Tk checks need a display or Xvfb):
+  python3 -m unittest discover -s Linux/tests -v
+The explicit isolated network/runtime check is:
+  python3 Linux/tests/integration_runtime.py --install-private-runtime
+See Linux/README.md and .github/workflows/linux.yml for distro dependencies.

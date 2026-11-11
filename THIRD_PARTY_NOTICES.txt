@@ -16,3 +16,7 @@ The Windows launcher uses Windows PowerShell and an existing Edge/Chrome browser
 No Apple/Microsoft frameworks or browser binaries are redistributed here.
 
 Bundled source and launcher code: MIT, see LICENSE.txt.
+
+The Linux launcher uses the system Python/Tk installation and an existing
+Chromium-family browser. These dependencies are not redistributed. The PNG
+icon is a format conversion of the same MIT-licensed Delegatus logo.

@@ -1,0 +1,16 @@
+{
+  "launcherVersion": "2.0.1",
+  "bunVersion": "1.4.3",
+  "delegatusVersion": "1.11.0",
+  "source": "https://api.github.com/repos/oven-sh/bun/releases/tags/bun-v1.4.3",
+  "assets": {
+    "x86_64": {
+      "name": "bun-linux-x64-baseline.zip",
+      "sha256": "1fc2edac843102909e3a1be1d8d9802cc6071cf074e67e88231f4ffe0f8b397b"
+    },
+    "aarch64": {
+      "name": "bun-linux-aarch64.zip",
+      "sha256": "efa9813da5ed72423bf847f916e8d2c47c0d776add972354026a75e10da9aa21"
+    }
+  }
+}
